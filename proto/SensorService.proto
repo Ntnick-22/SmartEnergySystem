@@ -1,0 +1,42 @@
+syntax = "proto3";
+option java_package = "generated.smartenergy.sensor";
+
+service SensorService {
+    // Simple RPC
+    rpc GetCurrentReading(ReadingRequest) returns (SensorData);
+    
+    // Server-side streaming RPC
+    rpc StreamSensorData(StreamRequest) returns (stream SensorData);
+    
+    // Simple RPC
+    rpc SetAlertThreshold(ThresholdRequest) returns (ConfirmationMessage);
+}
+
+message ReadingRequest {
+    string sensor_id = 1;
+}
+
+message StreamRequest {
+    string sensor_id = 1;
+    int32 interval_seconds = 2;
+}
+
+message ThresholdRequest {
+    string sensor_id = 1;
+    double max_temperature = 2;
+    double max_humidity = 3;
+}
+
+message SensorData {
+    string sensor_id = 1;
+    double temperature = 2;
+    double humidity = 3;
+    int32 co2_level = 4;
+    bool motion_detected = 5;
+    int64 timestamp = 6;
+}
+
+message ConfirmationMessage {
+    bool success = 1;
+    string message = 2;
+}

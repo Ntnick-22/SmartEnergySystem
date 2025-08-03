@@ -1,0 +1,53 @@
+syntax = "proto3";
+option java_package = "generated.smartenergy.report";
+
+service ReportService {
+    // Simple RPC
+    rpc GenerateEnergyReport(ReportRequest) returns (EnergyReport);
+    
+    // Bidirectional streaming RPC
+    rpc LiveDashboard(stream DashboardRequest) returns (stream DashboardUpdate);
+    
+    // Simple RPC
+    rpc GetSystemHealth(HealthRequest) returns (SystemHealth);
+}
+
+message ReportRequest {
+    string report_type = 1;  // "daily", "weekly", "monthly"
+    int64 start_time = 2;
+    int64 end_time = 3;
+}
+
+message DashboardRequest {
+    string request_type = 1;  // "start", "stop", "update"
+    int32 update_interval = 2;
+}
+
+message HealthRequest {
+    bool include_details = 1;
+}
+
+message EnergyReport {
+    string report_id = 1;
+    double total_consumption_kwh = 2;
+    double energy_saved_kwh = 3;
+    double cost_savings_euros = 4;
+    double co2_reduction_kg = 5;
+    int32 active_devices = 6;
+    string generated_time = 7;
+}
+
+message DashboardUpdate {
+    double current_power_usage = 1;
+    double daily_energy_saved = 2;
+    int32 devices_online = 3;
+    string alert_message = 4;
+    int64 timestamp = 5;
+}
+
+message SystemHealth {
+    string overall_status = 1;  // "HEALTHY", "WARNING", "ERROR"
+    int32 services_online = 2;
+    int32 total_services = 3;
+    repeated string service_status = 4;
+}
